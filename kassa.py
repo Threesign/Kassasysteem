@@ -4,8 +4,11 @@ class Kassabon:
     def __init__(self):
         self.totaal = 0.0
         self.klantnummer = 1
+        self.boodschappen = []
+
 
 import tkinter as tk
+from functools import reduce
 versie = 'Alpha 3'
 subtotaal = ''
 klantnummer = 1
@@ -24,7 +27,8 @@ class Product:
 
 producten = {}
 producten['7584185114255'] = Product(0.95, "zakgeldpotje")
-producten['9789054516200'] = Product(100.01, "boek")
+producten['9789054516200'] = Product(100.01, "Des vacanses mouvementees")
+producten['9789001887292'] = Product(25.0, "Het verraad van WaterDunen - Rob Ruggenberg")
 
 
 def product_opzoeken(barcode):
@@ -37,6 +41,7 @@ def werktotaalbij():
 def add(event):
     erbij = product_opzoeken(barcodeVeld.get())
 
+    kassabon.boodschappen.append(erbij)
     kassabon.totaal = kassabon.totaal + erbij.prijs
     barcodeVeld.delete(0, 'end')
 
@@ -44,14 +49,15 @@ def add(event):
 
 
 def totaalveldtekst():
-    return 'totaal: ' + str(kassabon.totaal) + ' EUR'
-
+    bonregels = ['EUR {:5,.2f} {:s}'.format(x.prijs, x.naam) for x in kassabon.boodschappen]
+    bontekst = reduce(lambda x, y: x + "\n" + y, bonregels, "")
+    return 'totaal: EUR {:5,.2f}'.format(kassabon.totaal) + '\n\n' + bontekst
 
 def nieuweKlant():
-    kassabon.totaal = 0
+    kassabon.totaal = 0.0
     kassabon.klantnummer = kassabon.klantnummer + 1
     werktotaalbij()
-    print(kassabon.klantnummer)
+    print('klantnummer: ' + str(kassabon.klantnummer))
 
 
 scherm = tk.Tk()
@@ -65,5 +71,6 @@ barcodeVeld.grid(row=1, column=0)
 leegmaken = tk.Button(scherm, text="Nieuwe klant", width=15, height=3, command= nieuweKlant)
 leegmaken.grid(row=0, column=1)
 barcodeVeld.bind("<Return>", add)
+
 
 scherm.mainloop()
