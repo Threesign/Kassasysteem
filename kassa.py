@@ -35,7 +35,7 @@ def product_opzoeken(barcode):
     return producten[barcode]
 
 
-def werktotaalbij():
+def werkbonbij():
     totaalLabel.configure(text=totaalveldtekst())
 
 def add(event):
@@ -45,7 +45,7 @@ def add(event):
     kassabon.totaal = kassabon.totaal + erbij.prijs
     barcodeVeld.delete(0, 'end')
 
-    werktotaalbij()
+    werkbonbij()
 
 
 def totaalveldtekst():
@@ -56,14 +56,15 @@ def totaalveldtekst():
 def nieuweKlant():
     kassabon.totaal = 0.0
     kassabon.klantnummer = kassabon.klantnummer + 1
-    werktotaalbij()
+    kassabon.boodschappen = []
+    werkbonbij()
     print('klantnummer: ' + str(kassabon.klantnummer))
 
 
 scherm = tk.Tk()
 scherm.title('kassasysteem')
 totaalLabel = tk.Label(scherm)
-werktotaalbij()
+werkbonbij()
 
 totaalLabel.grid(row=0, column=0)
 barcodeVeld = tk.Entry(scherm)
